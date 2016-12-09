@@ -6,7 +6,7 @@ class RGBColorFade: public Animation
     Chunk* _pChunk;
     Chunk* _pColors;
     int _currentColor;
-    Pixel* _pPixel;
+    Pixel _pixel;
 
   public:
     RGBColorFade(Adafruit_NeoPixel* pStrip, String rgbValues)
@@ -14,9 +14,9 @@ class RGBColorFade: public Animation
       _pStrip = pStrip;
       _pColors = new Chunk(rgbValues);
       _currentColor = _pColors->numPixels();
-      _pPixel = new Pixel(RGBColor(0, 0, 0));
+      _pixel = Pixel(RGBColor(0, 0, 0));
       _pChunk = new Chunk(1);
-      _pChunk->setPixel(0, _pPixel);
+      _pChunk->setPixel(0, _pixel);
 
       _pMapper = new Mapper(_pStrip);
     }
@@ -24,22 +24,21 @@ class RGBColorFade: public Animation
     ~RGBColorFade()
     {
       delete _pColors;
-      delete _pPixel;
       delete _pMapper;
     }
 
   virtual void update()
   {
-    _pPixel->update();
+    _pixel.update();
     
-    if (_pPixel->isDone())
+    if (_pixel.isDone())
     {
       Serial.println("u");
       _currentColor = (_currentColor + 1) % _pColors->numPixels();
 
       RGBColor color = _pColors->getPixel(_currentColor)->getColor();
       Serial.println(color.toString());
-      _pPixel->animateToNewColor(color, 1000);
+      _pixel.animateToNewColor(color, 1000);
     }
 
     _pMapper->renderAndShow(_pChunk);

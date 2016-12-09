@@ -45,9 +45,8 @@ class PixelAnimator
 class Pixel
 {
   private:
-        RGBColor _color;
-
         PixelAnimator* _pixelAnimator;
+        RGBColor _color;
 
   public:
         Pixel()
@@ -58,6 +57,14 @@ class Pixel
         Pixel(RGBColor color)
         {
           _color = color;
+          _pixelAnimator = 0;
+        }
+
+        Pixel(uint8_t r, uint8_t g, uint8_t b)
+        {
+          _color.red = r;
+          _color.green = g;
+          _color.blue = b;
           _pixelAnimator = 0;
         }
 

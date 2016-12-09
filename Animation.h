@@ -17,6 +17,11 @@ class Animation
     {
       
     }
+
+    virtual ~Animation()
+    {
+      Serial.println("~Animation");
+    }
  
 };
 

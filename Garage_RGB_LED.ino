@@ -1,4 +1,5 @@
 #include <stdarg.h>
+#include <pgmspace.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
@@ -20,7 +21,7 @@ const char* ssid     = "ASUS";
 const char* password = "Gunnerson";
 const char* host = "wifitest.adafruit.com";
 
-IPAddress ip(192,168,1,10);  //Node static IP
+IPAddress ip(192,168,1,11);  //Node static IP
 IPAddress gateway(192,168,1,1);
 IPAddress subnet(255,255,255,0);
 
@@ -46,10 +47,21 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(300, PIN, NEO_GRB + NEO_KHZ800);
 
 Animation* pCurrentAnimation;
  
+void printHeap()
+{
+    Serial.print("Free heap:");
+    Serial.println(ESP.getFreeHeap(),DEC);
+}
+
 void handleRoot() {
+  Serial.println("handleRoot");
+  printHeap();
+  
   ledState.Set(server);
 
-  server.send(200, "text/html", WebForms::GetWebForm(ledState));
+  printHeap();
+
+  WebForms::SendWebForm(server, ledState);
   Serial.println("Sent welcome");
 
   //WebForms::parseFormData(server);
@@ -58,6 +70,8 @@ void handleRoot() {
   Serial.println(ledState.RGBValues);
   Serial.println(ledState.TimeInSeconds);
   Serial.println(ledState.CycleCount);
+
+  printHeap();
 
   delay(100);
 }
@@ -95,6 +109,7 @@ void SetupWiFi()
 // 5) Circle fade with rotate. 
 
 void setup() {
+
   ledState.Mode = "Rainbow";
   ledState.NewData = 1;
 
@@ -106,21 +121,31 @@ void setup() {
   server.on("/", handleRoot);
   server.begin();
   Serial.println("HTTP server started");
-
+  
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
 
 
+
+  Serial.println("Sizes");
+  Serial.println(sizeof(Chunk));
+  Serial.println(sizeof(Pixel));
+  Serial.println(sizeof(RGBColor));
 }
 
 void setAnimationFromMode()
 {
   if (ledState.NewData)
   {
+    printHeap();
+
     ledState.NewData = false;
     if (pCurrentAnimation)
     {
+
+      Serial.println("Delete");
       delete pCurrentAnimation;
+      printHeap();
     }
 
     Serial.println(ledState.Mode);

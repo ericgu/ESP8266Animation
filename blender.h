@@ -1,8 +1,8 @@
 class Blender
 {
   private:
-    uint16_t _totalSize;
     Chunk* _pChunk;
+    uint16_t _totalSize;
     uint16_t _offset = 0;
 
   public:
@@ -15,12 +15,17 @@ class Blender
 
     ~Blender()
     {
-      //delete _pChunk;
+      if (_pChunk)
+      {
+        delete _pChunk;
+      }
     }
 
     Chunk* getChunk()
     {
-        return _pChunk;
+      Chunk* pChunk = _pChunk;
+      _pChunk = 0;
+      return pChunk;
     }
 
     Blender(RGBColor items[], int count, uint16_t steps)
@@ -35,7 +40,10 @@ class Blender
 
     void addBlend(RGBColor color1, RGBColor color2, uint16_t steps)
     {
-      Serial.println("Blend");
+          Serial.print("addBlend:");
+          Serial.println(steps);
+    Serial.println(ESP.getFreeHeap(),DEC);
+
         uint16_t redDelta = (uint16_t) (((color2.red - color1.red) << 8)/steps);
         uint16_t greenDelta = (uint16_t) (((color2.green - color1.green) << 8)/steps);
         uint16_t blueDelta = (uint16_t) (((color2.blue - color1.blue) << 8)/steps);
@@ -53,6 +61,7 @@ class Blender
         }
 
         _offset = (uint16_t) (_offset + steps);
+    Serial.println(ESP.getFreeHeap(),DEC);
     }
 };
 

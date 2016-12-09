@@ -1,15 +1,20 @@
 class Chunk
 {
   private:
+    Pixel* _pixels;
     uint16_t _numPixels;
-    Pixel** _pixels;
     uint16_t _offset = 0;
 
   public:
     Chunk(uint16_t numPixels)
     {
         _numPixels = numPixels;
-        _pixels = new Pixel*[numPixels];
+            Serial.print("Chunk:");
+    Serial.println(ESP.getFreeHeap(),DEC);
+
+        _pixels = new Pixel[numPixels];
+    Serial.println(ESP.getFreeHeap(),DEC);
+
     }
 
     Chunk(String rgbCommaSeparated)
@@ -17,7 +22,7 @@ class Chunk
       int numbers = CountCommas(rgbCommaSeparated) + 1;
       _numPixels = numbers / 3;
 
-      _pixels = new Pixel*[_numPixels];
+      _pixels = new Pixel[_numPixels];
 
       const char* pRgb = rgbCommaSeparated.c_str();
 
@@ -25,7 +30,7 @@ class Chunk
       {
         RGBColor color;
         pRgb = color.createFromString(pRgb);
-        _pixels[i] = new Pixel(color);          
+        _pixels[i] = Pixel(color);          
         Serial.println(color.toString());
       }
     }
@@ -50,6 +55,7 @@ class Chunk
 
     ~Chunk()
     {
+      Serial.println("~Chunk");
       delete _pixels;
     }
 
@@ -63,33 +69,40 @@ class Chunk
       Serial.println(_numPixels);
       for (int i = 0; i < _numPixels; i++)
       {
-        Serial.println(_pixels[i]->getColor().red);
+        Serial.println(_pixels[i].getColor().red);
       }
     }
 
     void setPixel(uint16_t index, uint8_t r, uint8_t g, uint8_t b)
     {
-        _pixels[index] = new Pixel(RGBColor(r, g, b));
+        _pixels[index] = Pixel(r, g, b);
     }
 
-
-    void setPixel(uint16_t index, Pixel* pPixel)
+    void setPixel(uint16_t index, Pixel pixel)
     {
-        _pixels[index] = pPixel;
+      if (index >= _numPixels)
+      {
+        Serial.print("setPixel index out of range was ");
+        Serial.print(index);
+        Serial.print(" max ");
+        Serial.println(_numPixels);
+      }
+      
+        _pixels[index] = pixel;
     }
 
     Pixel* getPixel(int i)
     {
-      return *(_pixels + i);
+      return _pixels + i;
     }
     
     Pixel* getNextPixel()
     {
-        Pixel** pPixel = _pixels + _offset;
+        Pixel* pPixel = _pixels + _offset;
 
         _offset = (_offset + 1) % _numPixels;
 
-        return *pPixel;
+        return pPixel;
     }
 
     void setOffset(uint16_t offset)
