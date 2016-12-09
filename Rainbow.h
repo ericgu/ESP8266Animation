@@ -36,7 +36,6 @@ class Rainbow: public Animation
 
    ~Rainbow()
    {
-      Serial.println("~Rainbox");
       delete _pMapper;
       delete _pChunk;
       delete _pAnimator;

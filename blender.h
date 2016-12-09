@@ -40,10 +40,6 @@ class Blender
 
     void addBlend(RGBColor color1, RGBColor color2, uint16_t steps)
     {
-          Serial.print("addBlend:");
-          Serial.println(steps);
-    Serial.println(ESP.getFreeHeap(),DEC);
-
         uint16_t redDelta = (uint16_t) (((color2.red - color1.red) << 8)/steps);
         uint16_t greenDelta = (uint16_t) (((color2.green - color1.green) << 8)/steps);
         uint16_t blueDelta = (uint16_t) (((color2.blue - color1.blue) << 8)/steps);
@@ -61,7 +57,6 @@ class Blender
         }
 
         _offset = (uint16_t) (_offset + steps);
-    Serial.println(ESP.getFreeHeap(),DEC);
     }
 };
 

@@ -31,6 +31,10 @@ public:
             Pixel* pPixel = pChunk->getNextPixel();
 
             RGBColor color = pPixel->getColor();
+            if (i == 0)
+            {
+              //Serial.println(color.red);
+            }
 
             for (int j = 0; j < chunkSize && i + j < limit; j++)
             {

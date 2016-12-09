@@ -9,12 +9,7 @@ class Chunk
     Chunk(uint16_t numPixels)
     {
         _numPixels = numPixels;
-            Serial.print("Chunk:");
-    Serial.println(ESP.getFreeHeap(),DEC);
-
         _pixels = new Pixel[numPixels];
-    Serial.println(ESP.getFreeHeap(),DEC);
-
     }
 
     Chunk(String rgbCommaSeparated)
@@ -55,7 +50,6 @@ class Chunk
 
     ~Chunk()
     {
-      Serial.println("~Chunk");
       delete _pixels;
     }
 

@@ -31,8 +31,6 @@ class WebForms
     server.setContentLength(CONTENT_LENGTH_UNKNOWN);
     server.send(200, "text/html", "");
  
-    return;
-
     server.sendContent_P(startString);
 
     SendPickLine(server, ledState.Mode, "Off", "Off");

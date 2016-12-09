@@ -59,19 +59,13 @@ void handleRoot() {
   
   ledState.Set(server);
 
-  printHeap();
-
   WebForms::SendWebForm(server, ledState);
-  Serial.println("Sent welcome");
 
-  //WebForms::parseFormData(server);
-
+  Serial.println("Webform Values");
   Serial.println(ledState.Mode);
   Serial.println(ledState.RGBValues);
   Serial.println(ledState.TimeInSeconds);
   Serial.println(ledState.CycleCount);
-
-  printHeap();
 
   delay(100);
 }
@@ -124,13 +118,6 @@ void setup() {
   
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
-
-
-
-  Serial.println("Sizes");
-  Serial.println(sizeof(Chunk));
-  Serial.println(sizeof(Pixel));
-  Serial.println(sizeof(RGBColor));
 }
 
 void setAnimationFromMode()
@@ -142,12 +129,10 @@ void setAnimationFromMode()
     ledState.NewData = false;
     if (pCurrentAnimation)
     {
-
-      Serial.println("Delete");
       delete pCurrentAnimation;
-      printHeap();
     }
 
+    Serial.print("Mode: ");
     Serial.println(ledState.Mode);
     
     if (ledState.Mode == "Rainbow")
@@ -209,8 +194,6 @@ void loop() {
   //delay(10);              // wait for a second
   //digitalWrite(0, LOW);    // turn the LED off by making the voltage LOW
   //delay(10);              // wait for a second
-
-    // Check if a client has connected
 
   server.handleClient();
   setAnimationFromMode();
